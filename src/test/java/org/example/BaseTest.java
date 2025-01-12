@@ -42,8 +42,8 @@ public class BaseTest {
         driver.findElement(By.id("pw")).sendKeys("burch2022");
         Thread.sleep(3000);
         driver.findElement(By.id("login")).click();
-        assertTrue(true, "Test Burch");
         Thread.sleep(3000);
+        assertTrue(driver.getPageSource().contains("Test Burch"));
         assertEquals("https://www.wizardpc.ba/",driver.getCurrentUrl());
     }
     //Test case 2
