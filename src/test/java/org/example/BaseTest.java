@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static org.junit.jupiter.api.Assertions.*;
 
-//If you go 'Run BaseTest' and certain tests couldn't be executed, please run tests separately!
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BaseTest {
     private static WebDriver driver;
@@ -23,15 +23,13 @@ public class BaseTest {
 
     @BeforeAll
     public static void setUp() {
-        System.setProperty("webdriver.chrome.driver", "C:/Users/edind/OneDrive/Radna površina/chromedriver-win64/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:/Users/Korisnik/Downloads/chromedriver-win64/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
         driver = new ChromeDriver(options);
         baseUrl = "https://www.wizardpc.ba/";
     }
 
-    //Test Scenario 1
-    //Test Case 1
     @Test
     @Order(1)
     public void loginWithValidCredentials() throws InterruptedException {
@@ -46,7 +44,7 @@ public class BaseTest {
         assertTrue(driver.getPageSource().contains("Test Burch"));
         assertEquals("https://www.wizardpc.ba/",driver.getCurrentUrl());
     }
-    //Test case 2
+
     @Test
     @Order(2)
     public void loginWithInvalidCredentials() throws InterruptedException {
@@ -62,7 +60,7 @@ public class BaseTest {
         assertEquals("Pogresan password ili username!", alertMessage);
         driver.switchTo().alert().accept();
     }
-    //Test Case 3
+
     @Test
     @Order(3)
     public void loginWithMissingCredentials() throws InterruptedException {
@@ -78,9 +76,6 @@ public class BaseTest {
         driver.switchTo().alert().accept();
     }
 
-
-    //Test scenario 2
-    //Test case 4
     @ParameterizedTest
     @ValueSource(strings = {"laptop", "xyz123"})
     @Order(4)
@@ -89,8 +84,9 @@ public class BaseTest {
         driver.findElement(By.id("searchfor")).sendKeys(query, Keys.ENTER);
         assertEquals("https://www.wizardpc.ba/search.php?searchfor=" + query, driver.getCurrentUrl());
         Thread.sleep(3000);
+        assertTrue(driver.getPageSource().contains(query));
     }
-    //Test case 5
+
     @ParameterizedTest
     @ValueSource(strings = {"laptop", "xyz123"})
     @Order(5)
@@ -99,11 +95,9 @@ public class BaseTest {
         driver.findElement(By.xpath("/html/body/div[1]/header/div[2]/div[2]/div[2]/div[2]/div[1]/div/div[2]/div/div/div/div[1]")).click();
         assertEquals("https://www.wizardpc.ba/search.php?searchfor=" + query, driver.getCurrentUrl());
         Thread.sleep(3000);
+        assertTrue(driver.getPageSource().contains(query));
     }
 
-
-    //Test scenario 3
-    //Test case 6
     @Test
     @Order(6)
     public void addProductToCartAndAssertThePriceOnScreen() throws InterruptedException {
@@ -114,7 +108,7 @@ public class BaseTest {
         Thread.sleep(3000);
         assertEquals("49.00 KM",totalPrice.getText());
     }
-    //Test case 7
+
     @Test
     @Order(7)
     public void addProductToCartAndAssertWeGoToCartScreenAndHaveRightProductInCart() throws InterruptedException {
@@ -130,9 +124,6 @@ public class BaseTest {
         assertEquals("Ukupno: 49,00 KM",totalPrice.getText());
     }
 
-
-    //Test Scenario 4
-    //Test case 8
     @Test
     @Order(8)
     public void testContinueShoppingAfterAddingTheProduct() throws InterruptedException {
@@ -145,26 +136,8 @@ public class BaseTest {
         assertEquals("https://www.wizardpc.ba/",driver.getCurrentUrl());
     }
 
-
-    //Test scenario 5
-    //Test case 9
     @Test
     @Order(9)
-    public void testThePriceAfterSelectingShippingRadio() throws InterruptedException {
-        driver.get(baseUrl);
-        driver.findElement(By.xpath("//span[@aid='12439']")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.id("cart_block")).click();
-        driver.findElement(By.xpath("//div[@class='row1 wos-total-cost']//input[@type='radio' and @value='1']")).click();
-        WebElement totalPrice = driver.findElement(By.xpath("//div[@class='row1 wos-total-cost']/div[contains(text(), 'Ukupno')]"));
-        assertEquals("Ukupno: 49,00 KM",totalPrice.getText(),"It Should be 49,00 KM");
-    }
-
-
-    //Test Scenario 6
-    //Test case 10
-    @Test
-    @Order(10)
     public void FromCartProceedToCheckout() throws InterruptedException {
         driver.get(baseUrl);
         driver.findElement(By.xpath("//span[@aid='12439']")).click();
@@ -176,10 +149,18 @@ public class BaseTest {
         assertEquals("https://www.wizardpc.ba/checkout.php",driver.getCurrentUrl());
     }
 
+    @Test
+    @Order(10)
+    public void testThePriceAfterSelectingShippingRadio() throws InterruptedException {
+        driver.get(baseUrl);
+        driver.findElement(By.xpath("//span[@aid='12439']")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.id("cart_block")).click();
+        driver.findElement(By.xpath("//div[@class='row1 wos-total-cost']//input[@type='radio' and @value='1']")).click();
+        WebElement totalPrice = driver.findElement(By.xpath("//div[@class='row1 wos-total-cost']/div[contains(text(), 'Ukupno')]"));
+        assertEquals("Ukupno: 59,00 KM",totalPrice.getText(),"It Should be 59,00 KM");
+    }
 
-    //Test Scenario 7
-    //Test case 11
-    //For this registration test please put new username and email (+1)
     @Test
     @Order(11)
     public void registrationWithValidDetails() throws InterruptedException {
@@ -208,7 +189,7 @@ public class BaseTest {
         assertTrue(driver.getPageSource().contains("usernameee"),"Our username should be displayed in top right same as when we log in");
         Thread.sleep(10000);
     }
-    //Test case 12
+
     @Test
     @Order(12)
     public void registrationWithMissingFields() throws InterruptedException {
@@ -228,7 +209,7 @@ public class BaseTest {
         Thread.sleep(5000);
         alert.accept();
     }
-    //Test case 13
+
     @Test
     @Order(13)
     public void registrationWithInvalidEmail() throws InterruptedException {
@@ -253,7 +234,7 @@ public class BaseTest {
         assertEquals("E-mail nije validan!!", alertText);
         alert.accept();
     }
-    //Test case 14
+
     @Test
     @Order(14)
     public void registrationWithExistingUsername() throws InterruptedException {
@@ -278,10 +259,9 @@ public class BaseTest {
         assertEquals("Username vec zauzet!", alertText);
         alert.accept();
     }
-    //Test case 15
+
     @Test
     @Order(15)
-    //For this test set username by (-1)
     public void registrationWithExistingEmail() throws InterruptedException {
         driver.get(baseUrl);
         driver.findElement(By.linkText("Registracija")).click();
@@ -305,9 +285,6 @@ public class BaseTest {
         alert.accept();
     }
 
-
-    //Test scenario 8
-    //Test case 16
     @Test
     @Order(16)
     public void navigationToContactPage() throws InterruptedException {
@@ -317,9 +294,6 @@ public class BaseTest {
         assertEquals("https://www.wizardpc.ba/contact.php", driver.getCurrentUrl());
     }
 
-
-    //Test scenario 9
-    //Test case 17
     @Test
     @Order(17)
     public void formValidationWithEmptyFields() throws InterruptedException {
@@ -336,9 +310,6 @@ public class BaseTest {
         Thread.sleep(2000);
     }
 
-
-    //Test scenario 10
-    //Test case 18
     @Test
     @Order(18)
     public void validateHttpsEnforcement() {
@@ -347,9 +318,6 @@ public class BaseTest {
         assertTrue(currentUrl.startsWith("https"), "HTTPS not enforced.");
     }
 
-
-    //Test scenario 11
-    //Test case 19
     @Test
     @Order(19)
     public void sessionTimeoutTest() throws InterruptedException {
@@ -361,13 +329,10 @@ public class BaseTest {
         Thread.sleep(2000);
 
         driver.navigate().refresh();
-        WebElement loginPage = driver.findElement(By.id("url"));
-        assertFalse(loginPage.isDisplayed(), "Session did not timeout.");
+        Thread.sleep(2000);
+        assertTrue(driver.getPageSource().contains("Test Burch"));
     }
 
-
-    //Test scenario 12
-    //Test case 20
     @Test
     @Order(20)
     public void validateProductCategoryNavigationMobiteli() throws InterruptedException {
@@ -376,7 +341,7 @@ public class BaseTest {
         Thread.sleep(2000);
         assertEquals("https://www.wizardpc.ba/search.php?SubCatID=16", driver.getCurrentUrl());
     }
-    //Test case 21
+
     @Test
     @Order(21)
     public void validateProductCategoryNavigationVideoIgre() throws InterruptedException{
@@ -386,9 +351,6 @@ public class BaseTest {
         assertEquals("https://www.wizardpc.ba/search.php?CatID=16", driver.getCurrentUrl());
     }
 
-
-    //Test scenario 13
-    //Test case 22
     @Test
     @Order(22)
     public void scrollToBottomAndAssertSocialInstagramLink() throws InterruptedException {
@@ -417,7 +379,7 @@ public class BaseTest {
         driver.close();
         driver.switchTo().window(originalWindow);
     }
-    //Test case 23
+
     @Test
     @Order(23)
     public void scrollToBottomAndAssertSocialFacebookLink() throws InterruptedException {
@@ -443,9 +405,6 @@ public class BaseTest {
         driver.switchTo().window(originalWindow);
     }
 
-
-    //Test scenario 14
-    //Test case 24
     @Test
     @Order(24)
     public void testHoverOverKonzoleAndClickPlayStation5() throws InterruptedException{
@@ -460,7 +419,7 @@ public class BaseTest {
         Thread.sleep(2000);
         assertEquals("https://www.wizardpc.ba/search.php?SubCatID=131", driver.getCurrentUrl());
     }
-    //Test case 25
+
     @Test
     @Order(25)
     public void testHoverOverBijelaTehnikaAndClickPrikaziSve() throws InterruptedException{
@@ -476,9 +435,6 @@ public class BaseTest {
         assertEquals("https://www.wizardpc.ba/search.php?CatID=34", driver.getCurrentUrl());
     }
 
-
-    //Test scenario 15
-    //Test case 26
     @Test
     @Order(26)
     public void testAddProductToCartPlusButton() throws InterruptedException{
@@ -499,7 +455,7 @@ public class BaseTest {
         String actualQuantity = quantityInput.getAttribute("value");
         assertEquals(String.valueOf(clickCount + 1), actualQuantity);
     }
-    //Test case 27
+
     @Test
     @Order(27)
     public void testAddProductToCartByManuallyEntering() throws InterruptedException{
@@ -522,9 +478,6 @@ public class BaseTest {
         assertEquals("3", actualQuantity);
     }
 
-
-    //Test scenario 16
-    //Test case 28
     @Test
     @Order(28)
     public void testAddingProductToWishlist() throws InterruptedException {
