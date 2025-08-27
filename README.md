@@ -22,8 +22,3 @@ This project contains automated tests for the [WizardPC website](https://www.wiz
 1. Clone the repository
 2. Set the correct path for `chromedriver` in the code
 3. Run tests via IDE or terminal using `mvn test`
-
-### 👨‍💻 Author
-
-**Ammarudin Kovačević**  
-Student @ International Burch University
